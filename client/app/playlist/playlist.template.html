@@ -7,6 +7,9 @@
             <i class="fa fa-floppy-o"></i>
           </button>
           <button class="btn btn-default" type="button">
+            <span class="badge">{{ metadata.range }}</span>
+          </button>
+          <button class="btn btn-default" type="button">
             <span class="badge">{{ playlist.length }}</span>
           </button>
         </span> 
@@ -20,7 +23,9 @@
   </div>
 </div>
 
+
 <br/>
+
 
 <div class="container" data-ng-show="playlist.length < 1">
   <div class="row">
@@ -36,51 +41,57 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-    <table class="table table-hover">
-      <tr data-ng-repeat="track in playlist">
-        <td><span>{{ track.literalStart }}</span></td>
-        <td>
-          <div class="media">
-            <div class="media-left" data-ng-show="cfg.showVideoInPlaylist" >
-              <video width="160" height="120" controls>
-                <source data-ng-src="{{ track.filepath }}" type="video/mp4">
-                Your browser does not support the video tag.
-              </video> 
+    <p>maxSize: {{isMaxSizeReached()}}</p>
+      <div class="progress">
+        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ metadata.rate }}%;">
+          {{ metadata.rate }} %
+        </div>
+      </div>
+      <table class="table table-hover">
+        <tr data-ng-repeat="track in playlist track by $index">
+          <td><span>{{ track.literalStart }}</span></td>
+          <td>
+            <div class="media">
+              <div class="media-left" data-ng-show="cfg.showVideoInPlaylist" >
+                <video width="160" height="120" controls>
+                  <source data-ng-src="{{ track.filepath }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video> 
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">{{ track.title }}</h4>
+                <p><span>{{ track.duration }}</span> {{ track.typeDesc }} </p>
+                <p class="hidden-xs">desc{{ track.description }} <span>({{ track.id }})</span></p>
+              </div>
             </div>
-            <div class="media-body">
-              <h4 class="media-heading">{{ track.title }}</h4>
-              <p><span>{{ track.duration }}</span> {{ track.typeDesc }} </p>
-              <p class="hidden-xs">desc{{ track.description }}</p>
-            </div>
-          </div>
-        </td>
-        <td>
-          <table>
-            <tr>
-              <td>
-                <button type="button" class="btn btn-sm btn-default" data-ng-click="setPosition(index, -1)" data-ng-disabled="isMaxSizeReached()">
-                  <i class="fa fa-lg fa-level-up" aria-hidden="true"></i>
-                </button>
-              </td>
-            </tr>
-            <tr height="40">
-              <td>
-                <button type="button" class="btn btn-sm btn-danger" data-ng-click="deleteTrack(index)" data-target="#modWarning">
-                  <i class="fa fa-minus" aria-hidden="true"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-ng-click="setPosition(index, 1)" data-target="#modTrackpicker" :disabled="isMaxSizeReached">
-                  <i class="fa fa-lg fa-level-down" aria-hidden="true"></i>
-                </button>
-              </td>
-            </tr>
-          </table>          
-        </td>
-      </tr>
-    </table>
+          </td>
+          <td>
+            <table>
+              <tr>
+                <td>
+                  <button type="button" class="btn btn-sm btn-default" data-ng-click="openPicker($index)" data-ng-disabled="metadata.isMaxSizeReached">
+                    <i class="fa fa-lg fa-level-up" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr height="40">
+                <td>
+                  <button type="button" class="btn btn-sm btn-danger" data-ng-click="remove($index)" data-target="#modWarning">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button type="button" class="btn btn-sm btn-default" data-ng-click="openPicker($index + 1)" data-ng-disabled="metadata.isMaxSizeReached">
+                    <i class="fa fa-lg fa-level-down" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            </table>          
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>

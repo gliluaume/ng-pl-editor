@@ -4,6 +4,8 @@ angular
 .module('plEditor.playlist')
 .service('playlistService', [function() {
   var plStartTime = 21600;
+  // var plEndTime = 86400;
+  var plEndTime = 25400;
   var padLeft = function(text, char, len) {
     text = text.toString();
     char = char.toString();
@@ -42,6 +44,9 @@ angular
     newTrack.literalStart = __secondsToHours(newTrack.startTime);
   };
 
+  var plSecondEnd = function(playlist) {
+    return playlist[playlist.length - 1].startTime + playlist[playlist.length - 1].duration;
+  }
 
   var svc = {};
   svc.createDaysLocal = function() {
@@ -83,10 +88,32 @@ angular
     return enrichedPlaylist;
   };
 
-  svc.playlistEnd = 86400;
+  svc.playlistStart = plStartTime;
+  svc.playlistEnd = plEndTime;
   svc.isMaxSizeReached = function(playlist) {
     return playlist[playlist.length - 1].startTime >= svc.playlistEnd;
   };
+
+
+  svc.plRange = function(playlist) {
+    if(playlist.length > 0) {
+      let plEnd = __secondsToHours(plSecondEnd(playlist));
+      return `${playlist[0].literalStart} : ${plEnd}`
+    }
+    return '--';
+  }
+
+  svc.plRate = function(playlist) {
+    console.log('in svc', playlist);
+    if(playlist.length > 0) {
+      // let toto = Math.min(100, Math.round( (plSecondEnd(playlist) - playlist[0].startTime) / (svc.playlistEnd - svc.playlistStart) ));
+      console.log((plSecondEnd(playlist) - playlist[0].startTime), (svc.playlistEnd - svc.playlistStart), (plSecondEnd(playlist) - playlist[0].startTime) / (svc.playlistEnd - svc.playlistStart));
+      let toto = Math.min(100, Math.round( 100 * (plSecondEnd(playlist) - playlist[0].startTime) / (svc.playlistEnd - svc.playlistStart) ));
+      console.log('taux', toto);
+      return toto;
+    }
+    return 0;
+  }
 
   return svc;
 }])
