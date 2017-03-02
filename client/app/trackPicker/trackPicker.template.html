@@ -3,22 +3,45 @@
     <h3 class="modal-title" id="modal-title">Sélectionner une vidéo à insérer</h3>
   </div>
   <div class="modal-body ng-scope" id="modal-body">
-    <ul>
-      <li class="media" data-ng-repeat="track in $ctrl.availableTracks">
-        <div class="media-left">
-          <video width="160" height="120" controls>
-            <source data-ng-src="{{ track.filepath }}" type="video/mp4">
-            Your browser does not support the video tag.
-          </video> 
-        </div>
-        <div class="media-body">
-          <h4 class="media-heading">{{ track.title }}</h4>
-          <p><span>[{{ track.duration }}]</span> {{ track.typeDesc }} <span>({{ track.id }})</span></p>
-          <button class="btn btn-default" type="button" id="addItem" data-ng-click="$ctrl.addTrack(track)" :disabled="!isAddingAllowed()">ajouter</button>
-        </div>
-      </li>
-    </ul>
+<!-- <ul   ng-model="$ctrl.items">
+  <li ng-repeat="item in $ctrl.items">{{ item }}</li>
+</ul> -->
+
+    <div class="row test">
+      <div class="col-xs-12">
+        <table class="table table-stripped">
+          <tr data-ng-model="$ctrl.addedTracks" ui-sortable="sortableOptions">
+            <td class="media" style="border:0px" data-ng-repeat="t in $ctrl.addedTracks track by $index">
+              <video width="80" height="60" controls>
+              <source data-ng-src="{{ t.filepath }}" type="video/mp4">
+              Your browser does not support the video tag.
+              </video>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row test">
+      <div class="col-xs-12">
+        <ul>
+          <li class="media" data-ng-repeat="track in $ctrl.availableTracks">
+            <div class="media-left">
+              <video width="160" height="120" controls>
+                <source data-ng-src="{{ track.filepath }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video> 
+            </div>
+            <div class="media-body">
+              <h4 class="media-heading">{{ track.title }}</h4>
+              <p><span>[{{ track.duration }}]</span> {{ track.typeDesc }} <span>({{ track.id }})</span></p>
+              <button class="btn btn-default" type="button" id="addItem" data-ng-click="$ctrl.addTrack(track)" data-ng-disabled="!$ctrl.addAllowed">ajouter</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
+
   <div class="modal-footer ng-scope">
     <button type="button" class="btn btn-default" data-ng-click="$ctrl.ok()">confirmer</button>
     <button type="button" class="btn btn-default" data-ng-click="$ctrl.cancel()">annuler</button>

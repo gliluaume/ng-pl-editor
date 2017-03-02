@@ -1,26 +1,11 @@
 /* app css stylesheet */
-
-/*.menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+.modal-body {
+  height: 550px;
+  overflow-y: auto;
 }
 
-.menu:before {
-  content: "[";
+.test {
+  width: 100%;
+  overflow-x: auto;
 }
 
-.menu:after {
-  content: "]";
-}
-
-.menu > li {
-  display: inline;
-}
-
-.menu > li + li:before {
-  content: "|";
-  padding-right: 0.3em;
-}
-*/

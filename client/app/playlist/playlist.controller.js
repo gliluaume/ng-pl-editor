@@ -9,6 +9,7 @@ angular
   var insertionIndex = 0;
   $scope.days = playlistService.createDaysLocal();
   $scope.selectedDay = $scope.days[1];
+  // $scope.playlist = playlistService.playlist;
   $scope.playlist = [];
 
   $scope.cfg = {

@@ -22,7 +22,7 @@ angular
     return padder + text;
   };
 
-  var __secondsToHours = function (secondsFormMidnight) {
+  var secondsToHours = function (secondsFormMidnight) {
     var hours   = Math.floor(secondsFormMidnight / 3600);
     var minutes = Math.floor((secondsFormMidnight - (hours * 3600)) / 60);
     var seconds = secondsFormMidnight - (hours * 3600) - (minutes * 60);
@@ -34,14 +34,14 @@ angular
     return `${hours}:${minutes}:${seconds}`;
   };
 
-  var __calculateStartTime = function(newTrack, enrichedPlaylist) {
+  var calculateStartTime = function(newTrack, enrichedPlaylist) {
     if(enrichedPlaylist.length === 0) {
       newTrack.startTime = plStartTime;
     } else {
       var lastTrack = enrichedPlaylist[enrichedPlaylist.length - 1];
       newTrack.startTime = lastTrack.startTime + lastTrack.duration;
     }
-    newTrack.literalStart = __secondsToHours(newTrack.startTime);
+    newTrack.literalStart = secondsToHours(newTrack.startTime);
   };
 
   var plSecondEnd = function(playlist) {
@@ -49,6 +49,10 @@ angular
   }
 
   var svc = {};
+  svc.playlist = [];
+  svc.playlistStart = plStartTime;
+  svc.playlistEnd = plEndTime;
+
   svc.createDaysLocal = function() {
     var apiDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
     // peuple la liste des jours:
@@ -69,47 +73,47 @@ angular
 
   svc.buildPlaylist = function(rawPlaylist, tracks) {      
     var enrichedPlaylist = [];
-    console.log(rawPlaylist, typeof rawPlaylist, rawPlaylist.prototype);
     if(rawPlaylist.length > 0) {
       rawPlaylist.forEach(function(trackId) {
-        console.log(trackId);
         var track = tracks.filter(function(track) {
           return track.id == trackId;
         }).pop();
-        __calculateStartTime(track, enrichedPlaylist);
-        console.log(track);
+        calculateStartTime(track, enrichedPlaylist);
         enrichedPlaylist.push(Object.assign({}, track));
       });
       enrichedPlaylist = enrichedPlaylist;
-      console.log('enrichedPlaylist');
-      console.log(enrichedPlaylist, enrichedPlaylist.length);
-
+      console.log('enrichedPlaylist', enrichedPlaylist, enrichedPlaylist.length);
     }
-    return enrichedPlaylist;
+    svc.playlist = enrichedPlaylist;
+
+    return svc.playlist;
   };
 
-  svc.playlistStart = plStartTime;
-  svc.playlistEnd = plEndTime;
   svc.isMaxSizeReached = function(playlist) {
     return playlist[playlist.length - 1].startTime >= svc.playlistEnd;
   };
 
-
   svc.plRange = function(playlist) {
     if(playlist.length > 0) {
-      let plEnd = __secondsToHours(plSecondEnd(playlist));
+      let plEnd = secondsToHours(plSecondEnd(playlist));
       return `${playlist[0].literalStart} : ${plEnd}`
     }
     return '--';
   }
 
+  svc.availableSpace = function(pl) {
+    let playlist = pl ? pl : svc.playlist;
+    let availableSeconds = (svc.playlistEnd - svc.playlistStart) - (plSecondEnd(playlist) - playlist[0].startTime); 
+    return {
+      seconds: availableSeconds,
+      literal: secondsToHours(availableSeconds)
+    }
+  }
+
   svc.plRate = function(playlist) {
     console.log('in svc', playlist);
     if(playlist.length > 0) {
-      // let toto = Math.min(100, Math.round( (plSecondEnd(playlist) - playlist[0].startTime) / (svc.playlistEnd - svc.playlistStart) ));
-      console.log((plSecondEnd(playlist) - playlist[0].startTime), (svc.playlistEnd - svc.playlistStart), (plSecondEnd(playlist) - playlist[0].startTime) / (svc.playlistEnd - svc.playlistStart));
       let toto = Math.min(100, Math.round( 100 * (plSecondEnd(playlist) - playlist[0].startTime) / (svc.playlistEnd - svc.playlistStart) ));
-      console.log('taux', toto);
       return toto;
     }
     return 0;
