@@ -21,37 +21,40 @@ app.use('/', express.static(path.join(__dirname, cfg.environment.clientApp)));
 const videoDir = path.join(cfg.environment.resourceDir, cfg.environment.videoRoute);
 app.use('/' + cfg.environment.videoRoute, express.static(videoDir));
 
-var tracks = [
-  {
-  'id': 9,
-  'filepath': 'video/CAP_0009_180630.mp4',
-  'alias': 'LE WHARLF DE BASSAM.mpg.mobile1080p_H264_@_MP3_@.MPEG4.MP4',
-  'title': 'Test capsule',
-  'description': 'Capsule en HD',
-  'typeDesc': 'Capsule',
-  'duration':180
-  },
-  {
-  'id': 7,
-  'filepath': 'video/CAP_0007_180630.mp4',
-  'alias': 'La pirogue de génération Félix Houphouët Boigny appelée FA ELE ou ABY SALAMAN .mpg.mobile1080p_H264_@_MP3_@.MPEG4.MP4',
-  'title': 'Ma première capsule',
-  'description': 'La pirogue de génération Félix Houphouët Boigny',
-  'typeDesc': 'Capsule',
-  'duration':181
-  },
-  {
-  'id': 3,
-  'filepath': 'video/CAP_0003_180630.mp4',
-  'title': 'Ma deuxième capsule',
-  'alias': 'ROYAUME DU SANWI.mpg.mobile1080p_H264_@_MP3_@.MPEG4.MP4',
-  'description': 'Le royaume du Sanwi',
-  'typeDesc': 'Publicité',
-  'duration':180
-  }
-];
+/* tracks format
+  var tracks = [
+    {
+    'id': 9,
+    'filepath': 'video/CAP_0009_180630.mp4',
+    'alias': 'Alias 9',
+    'title': 'Test capsule',
+    'description': 'Capsule en HD',
+    'typeDesc': 'Capsule',
+    'duration':180
+    },
+    {
+    'id': 7,
+    'filepath': 'video/CAP_0007_180630.mp4',
+    'alias': 'Alias 7',
+    'title': 'Ma première capsule',
+    'description': 'La pirogue de génération Félix Houphouët Boigny',
+    'typeDesc': 'Capsule',
+    'duration':181
+    },
+    {
+    'id': 3,
+    'filepath': 'video/CAP_0003_180630.mp4',
+    'title': 'Ma deuxième capsule',
+    'alias': 'Alias 3',
+    'description': 'Le royaume du Sanwi',
+    'typeDesc': 'Publicité',
+    'duration':180
+    }
+  ];
+*/
 
 app.get('/api/track', (req, res) => {
+  console.log('get track');
   plRepo.listFiles().then(function(promises){
     Promise.all(promises)
     .then(results => {
@@ -66,26 +69,32 @@ app.get('/api/track', (req, res) => {
   });
 });
 
-const playlists = {
-  'mon' : [9, 7, 3, 7, 9], 
-  'tue' : [9], 
-  'wed' : [7], 
-  'thu' : [3, 7], 
-  'fri' : [7, 9], 
-  'sat' : [], 
-  'sun' : [7]
-};
+/* playlist format
+  const playlists = {
+    'mon' : [9, 7, 3, 7, 9], 
+    'tue' : [9], 
+    'wed' : [7], 
+    'thu' : [3, 7], 
+    'fri' : [7, 9], 
+    'sat' : [], 
+    'sun' : [7]
+  };
+*/
 
 app.get('/api/playlist/:day', (req, res) => {
-  res.send(playlists[req.params.day]);
+  console.log('get playlist');
+  plRepo.readPlaylist(req.params.day, (trackIds) => {
+    res.send(trackIds);
+    // res.send(playlists[req.params.day]);
+  });
 });
 
 
 app.patch('/api/playlist/:day', (req, res) => {
-  console.log('patch', req.url, req.params, req.body);
+  console.log('patch playlist');
   let resBody = 'ok';
-
   let filepaths = [];
+
   try {
     filepaths = plRepo.savePlaylist(req.params.day, req.body);
   } catch(e){

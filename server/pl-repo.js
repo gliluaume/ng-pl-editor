@@ -73,6 +73,7 @@ var configurePlRepo = function(cfgModule) {
   var plRepo = {
     tracks: [],
     listFiles : function() { 
+      console.log('videoDir for promise', videoDir);
       return new Promise((resolve, reject) => {
         fs.readdir(videoDir, function(error, files) {
           var ret = files.filter(function(file) {
@@ -97,6 +98,7 @@ var configurePlRepo = function(cfgModule) {
       var filepaths = [];
       trackIds.forEach(function(trackId) {
         // trackId=1234;
+        console.log(trackId);
         let trackpath = playlistDesc[trackId];
 
         if(!trackpath)
@@ -106,6 +108,13 @@ var configurePlRepo = function(cfgModule) {
       });
 
       return filepaths;
+    },
+
+    readPlaylistFile: function(playlistpath, callback) {
+      fs.readFile(playlistpath, (err, data) => {
+        if (err) throw err;
+        if(callback) callback(data);
+      });
     },
 
     writePlaylistFile: function(playlistpath, trackpaths, callback) {
@@ -122,11 +131,22 @@ var configurePlRepo = function(cfgModule) {
         console.log('file saved.');
         if(callback) callback();
       });
-
     },
 
     formatDate: function() {
       return dateFormat.asString('yyyy-MM-dd-hhmmss.SSS', new Date());
+    },
+
+    readPlaylist: function(day, callback) {
+      let filepath = path.join(cfg.environment.plPath, cfg.playlists[day]);
+      console.log('playlist filepath', filepath);
+      plRepo.readPlaylistFile(filepath, (data) => {
+        let trackIds = data.toString().split('\n')
+        .map(function(line) {
+          return parseInt(path.basename(line).split('_')[1], 10);
+        })
+        if(callback) callback(trackIds);
+      });
     },
 
     writePlaylist: function(playlistpath, trackpaths, callback) {
@@ -145,14 +165,17 @@ var configurePlRepo = function(cfgModule) {
     },
 
     savePlaylist: function(day, trackIds) {
+      console.log('cfg', cfg, 'day', day, 'trackIds', trackIds);
       let playlistpath = path.join(cfg.environment.plPath, cfg.playlists[day]);
       var trackpaths;
 
       if(plRepo.tracks.length < 1) {
         plRepo.listFiles().then(function(promises){
+          console.log('promises count', promises.length);
           Promise.all(promises)
           .then(results => {
             plRepo.tracks = results;
+            console.log('trackIds', trackIds);
             trackpaths = plRepo.calculatePlaylist(day, trackIds);
             plRepo.writePlaylist(playlistpath, trackpaths, () => {
               return trackpaths;
@@ -164,6 +187,7 @@ var configurePlRepo = function(cfgModule) {
         });
       } 
       else {
+        console.log('trackIds (else)', trackIds);
         trackpaths = plRepo.calculatePlaylist(day, trackIds);
         plRepo.writePlaylist(playlistpath, trackpaths, () => {
           return trackpaths;

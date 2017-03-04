@@ -21,6 +21,7 @@ const configuration = {
     clientApp: '../client/app/',
     videoExt: '.mp4',
     resourceDir: '/home/guillaume/Documents/projets/ng-pl-editor/resource',
+    plPath: '/home/guillaume/Documents/projets/ng-pl-editor/resource/playlist',
     videoRoute: 'video'
   }
 };
