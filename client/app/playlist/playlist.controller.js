@@ -11,14 +11,7 @@ angular
   $scope.selectedDay = $scope.days[1];
   // $scope.playlist = playlistService.playlist;
   $scope.playlist = [];
-
-  // $scope.cfg = {
-  //   showVideoInPlaylist: true,
-  //   confirmAction: true,
-  //   animationsEnabled: true
-  // };
   $scope.cfg = configuratorService.values;
-
 
   var setMetadata = function() {
     var plRate = playlistService.plRate($scope.playlist);
