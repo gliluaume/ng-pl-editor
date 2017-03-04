@@ -5,5 +5,6 @@ angular
   'ui.bootstrap',
   'ui.bootstrap.tpls',
   'ngResource',
-  'ui.sortable'
+  'ui.sortable',
+   'plEditor.configurator'
   ])

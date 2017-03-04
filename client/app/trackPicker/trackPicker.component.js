@@ -10,20 +10,17 @@ angular
     close: '&' 
   },
 
-  controller: ['playlistService', 'trackPickerService', function(playlistService, trackPickerService) {
+  controller: ['playlistService', 'trackPickerService','configuratorService', function(playlistService, trackPickerService, configuratorService) {
     this.addedTracks = [];
-    this.items = ["One", "Two", "Three"];
+    this.cfg = configuratorService.values;
+    // this.sortableOptions = {
+    //   update: function(e, ui) { 
+    //     console.log('hola', e, ui);
+    //    },
+    //   axis: 'x'
+    // };
 
-    this.sortableOptions = {
-      update: function(e, ui) { 
-        console.log('hola', e, ui);
-       },
-      axis: 'x'
-    };
-
-    console.log('hola in controller track picker');
     this.availableTracks = trackPickerService.query();
-
     this.availableSpace = playlistService.availableSpace;
     this.pl = playlistService.playlist;
     this.addAllowed = true;
