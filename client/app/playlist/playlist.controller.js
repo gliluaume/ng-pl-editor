@@ -4,20 +4,22 @@ angular
 
 .module('plEditor.playlist')
 
-.controller('playlistController', ['$scope', '$uibModal', 'playlistService', 'playlistRepoService', 'trackPickerService', '$q',
-  function playlistController($scope, $uibModal, playlistService, playlistRepoService, trackPickerService, $q) {
+.controller('playlistController', ['$scope', '$uibModal', 'playlistService', 'playlistRepoService', 'trackPickerService', '$q', 'configuratorService',
+  function playlistController($scope, $uibModal, playlistService, playlistRepoService, trackPickerService, $q, configuratorService) {
   var insertionIndex = 0;
   $scope.days = playlistService.createDaysLocal();
   $scope.selectedDay = $scope.days[1];
   // $scope.playlist = playlistService.playlist;
   $scope.playlist = [];
 
-  $scope.cfg = {
-    showVideoInPlaylist: true,
-    confirmAction: true,
-    animationsEnabled: true
-  };
-  
+  // $scope.cfg = {
+  //   showVideoInPlaylist: true,
+  //   confirmAction: true,
+  //   animationsEnabled: true
+  // };
+  $scope.cfg = configuratorService.values;
+
+
   var setMetadata = function() {
     var plRate = playlistService.plRate($scope.playlist);
     $scope.metadata = { 
@@ -29,7 +31,7 @@ angular
   setMetadata();
 
   $scope.onDayChange = function() {
-    console.log('hola', $scope.selectedDay);
+    console.log('day changed to', $scope.selectedDay);
 
     var playlistPromise = playlistRepoService.get({ day: $scope.selectedDay.apiAlias }).$promise;
     var tracksPromise = trackPickerService.query().$promise;
@@ -61,7 +63,6 @@ angular
   }
 
   // track picker management
-  $scope.animationsEnabled = $scope.cfg.animationsEnabled;
   $scope.close = function() {
     console.log('close');
   }
@@ -70,14 +71,11 @@ angular
     insertionIndex = plIndex;
     console.log('plIndex', plIndex);
     var modalInstance = $uibModal.open({
-      // templateUrl: 'trackPicker/trackPicker.template.html'
-      animation: $scope.animationsEnabled,
+      animation: $scope.cfg.animationsEnabled,
       component: 'picker'
     });
 
     modalInstance.result.then(function (selectedTracks) {
-      console.log('insetionIndex : ', insertionIndex, 'reçu par la playlist', selectedTracks);
-
       let plAsIntArray = $scope.playlist.map(function(enrichedTrack) { return enrichedTrack.id; });
       let tmp = plAsIntArray.slice(0, insertionIndex);
       Array.prototype.push.apply(tmp, selectedTracks.addedTracks);
@@ -89,6 +87,24 @@ angular
       console.info('track-picker dismissed at: ' + new Date());
     });
   };
+
+
+  $scope.saving = {};
+  $scope.saving.value=false;
+  $scope.savePlaylist = function() {
+    $scope.saving.value = true;
+    console.log('hola save', $scope.saving);
+    let trackIds = $scope.playlist.map(function(track) { return track.id; });
+    playlistRepoService.patch({ day: $scope.selectedDay.apiAlias }, trackIds).$promise
+    .then(function(data){
+      console.log(data);
+      $scope.saving.value = false;
+    })
+    .catch(function(error) {
+      $scope.saving.value = false;
+      console.error(error);
+    })
+  }
 
 }])
 ;

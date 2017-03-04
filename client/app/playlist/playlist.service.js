@@ -2,7 +2,7 @@
 
 angular
 .module('plEditor.playlist')
-.service('playlistService', [function() {
+.service('playlistService', ['$filter', function($filter) {
   var plStartTime = 21600;
   // var plEndTime = 86400;
   var plEndTime = 25400;
@@ -64,10 +64,11 @@ angular
       days.push({
         index: i, 
         label: d.toLocaleString(window.navigator.language, {weekday: 'long'}),
-        apiAlias: apiDays[i]
+        apiAlias: apiDays[i],
+        lblNg: $filter('date')(d, 'EEEE')
       })
     }
-    console.log(days);
+    console.log('days', days);
     return days;
   };
 
@@ -96,7 +97,7 @@ angular
   svc.plRange = function(playlist) {
     if(playlist.length > 0) {
       let plEnd = secondsToHours(plSecondEnd(playlist));
-      return `${playlist[0].literalStart} : ${plEnd}`
+      return `${playlist[0].literalStart} - ${plEnd}`
     }
     return '--';
   }
@@ -127,6 +128,9 @@ angular
     get: {
       method: 'GET',
       isArray: true
+    },
+    patch: {
+      method: 'PATCH'
     }
   }); 
 }])
