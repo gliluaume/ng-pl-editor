@@ -2,7 +2,7 @@
 
 var trace = {
   req: function(req, res, next) {
-    console.log('request', req.url);
+    console.log('request url', req.url, 'params', req.params);
     next();
   }
 };
