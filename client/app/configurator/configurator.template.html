@@ -1,0 +1,44 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-ng-click="$ctrl.close()">&times;</button>
+    <h4 class="modal-title">Préférences</h4>
+  </div>
+  <div class="modal-body" text-align> 
+
+    <div class="container-fluid">
+          <form class="form-horizontal">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" data-ng-model="$ctrl.cfg.confirmAction"> Demander une confirmation des actions
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" data-ng-model="$ctrl.cfg.showVideoInPlaylist"> Afficher les vidéos dans la playlist
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" data-ng-model="$ctrl.cfg.animationsEnabled"> Animer les popups
+                  </label>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="form-group row">
+              <div class="col-md-4"> 
+              <label>Hauteur vidéo</label>
+              </div>
+              <div class="col-md-8"> 
+              <input type="number" data-ng-model="$ctrl.cfg.videoHeight" class="form-control" min="80" max="240" step="10">
+              </div>
+            </div>
+          </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-ng-click="$ctrl.close()">fermer</button>
+  </div>
+</div>

@@ -1,13 +1,15 @@
 <div class="modal-content">
   <div class="modal-header ng-scope">
-    <h3 class="modal-title" id="modal-title">Sélectionner une vidéo à insérer</h3>
+    <h3 class="modal-title" id="modal-title">Sélection</h3>
+    <button type="button" class="btn btn-default" data-ng-click="$ctrl.ok()">confirmer</button>
+    <button type="button" class="btn btn-default" data-ng-click="$ctrl.cancel()">annuler</button>
   </div>
-  <div class="modal-body ng-scope" id="modal-body">
+  <div class="modal-body" id="picker-body">
 <!-- <ul   ng-model="$ctrl.items">
   <li ng-repeat="item in $ctrl.items">{{ item }}</li>
 </ul> -->
 
-    <div class="row test">
+    <div class="row">
       <div class="col-xs-12">
         <table class="table table-stripped">
           <tr data-ng-model="$ctrl.addedTracks" ui-sortable="sortableOptions">
@@ -26,7 +28,7 @@
         <ul>
           <li class="media" data-ng-repeat="track in $ctrl.availableTracks">
             <div class="media-left">
-              <video width="160" height="120" controls>
+              <video width="{{ $ctrl.cfg.videoWidth }}px" height="{{ $ctrl.cfg.videoHeight }}px" controls>
                 <source data-ng-src="{{ track.filepath }}" type="video/mp4">
                 Your browser does not support the video tag.
               </video> 
@@ -34,7 +36,9 @@
             <div class="media-body">
               <h4 class="media-heading">{{ track.title }}</h4>
               <p><span>[{{ track.duration }}]</span> {{ track.typeDesc }} <span>({{ track.id }})</span></p>
-              <button class="btn btn-default" type="button" id="addItem" data-ng-click="$ctrl.addTrack(track)" data-ng-disabled="!$ctrl.addAllowed">ajouter</button>
+              <button class="btn btn-default" type="button" id="addItem" data-ng-click="$ctrl.addTrack(track)" data-ng-disabled="!$ctrl.addAllowed">
+              <i class="fa fa-plus"></i>
+              </button>
             </div>
           </li>
         </ul>
@@ -42,7 +46,7 @@
     </div>
   </div>
 
-  <div class="modal-footer ng-scope">
+  <div class="modal-footer">
     <button type="button" class="btn btn-default" data-ng-click="$ctrl.ok()">confirmer</button>
     <button type="button" class="btn btn-default" data-ng-click="$ctrl.cancel()">annuler</button>
   </div>
