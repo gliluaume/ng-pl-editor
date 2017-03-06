@@ -15,13 +15,28 @@ const cfg = require(configFile);
 const plRepo = require('./pl-repo')(configFile);
 
 
+console.log('initialize tracks description');
+plRepo.listFiles().then(function(promises){
+  Promise.all(promises)
+  .then(results => {
+    plRepo.tracks = results;
+    console.log('tracks', plRepo.tracks);
+    console.log('tracks description done');
+  })
+  .catch(e => {
+    console.error(e);
+  })
+});
+
 app.use(bodyParser.json());
 app.use(trace.req);
 app.use('/', express.static(path.join(__dirname, cfg.environment.clientApp)));
 const videoDir = path.join(cfg.environment.resourceDir, cfg.environment.videoRoute);
 app.use('/' + cfg.environment.videoRoute, express.static(videoDir));
 
-/* tracks format
+/* 
+  tracks format
+
   var tracks = [
     {
     'id': 9,
@@ -51,25 +66,10 @@ app.use('/' + cfg.environment.videoRoute, express.static(videoDir));
     'duration':180
     }
   ];
-*/
 
-app.get('/api/track', (req, res) => {
-  console.log('get track');
-  plRepo.listFiles().then(function(promises){
-    Promise.all(promises)
-    .then(results => {
-      console.log('resolution globale');
-      plRepo.tracks = results;
-      console.log('tracks', plRepo.tracks);
-      res.send(JSON.stringify(plRepo.tracks));
-    })
-    .catch(e => {
-      console.error(e);
-    })
-  });
-});
 
-/* playlist format
+  playlist format
+
   const playlists = {
     'mon' : [9, 7, 3, 7, 9], 
     'tue' : [9], 
@@ -80,6 +80,21 @@ app.get('/api/track', (req, res) => {
     'sun' : [7]
   };
 */
+
+app.get('/api/track', (req, res) => {
+  console.log('get track');
+  let reqBody;
+  if(plRepo.isInitialized()) {
+    reqBody = plRepo.tracks;
+  }
+  else {
+    res.statusCode = 503;
+    console.log('error sent : track description not initialized');
+  }
+  res.send(plRepo.tracks);
+});
+
+
 
 app.get('/api/playlist/:day', (req, res) => {
   console.log('get playlist');
