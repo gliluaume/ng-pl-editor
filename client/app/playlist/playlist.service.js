@@ -104,7 +104,12 @@ angular
 
   svc.availableSpace = function(pl) {
     let playlist = pl ? pl : svc.playlist;
-    let availableSeconds = (svc.playlistEnd - svc.playlistStart) - (plSecondEnd(playlist) - playlist[0].startTime); 
+    let availableSeconds;
+    if(playlist.length > 0) 
+      availableSeconds = (svc.playlistEnd - svc.playlistStart) - (plSecondEnd(playlist) - playlist[0].startTime);
+    else
+      availableSeconds = (svc.playlistEnd - svc.playlistStart);
+
     return {
       seconds: availableSeconds,
       literal: secondsToHours(availableSeconds)
