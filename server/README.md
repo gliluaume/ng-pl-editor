@@ -14,3 +14,15 @@ Routes request to playlist repo. Handles :
 
 ### configuration.js
 Describes configuration as a JavaScript object. Loaded as a module.
+
+## v1.1.0
+### server.js
+Initialize plRepo to fill tracks description.
+
+### pl-repo.js
+
+ * simplify track metadata reading with apropriate use of exifTool
+ * list tag as an array instead of an object
+
+### configuration.js
+Describes video file pattern

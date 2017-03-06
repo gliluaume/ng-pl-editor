@@ -2,6 +2,7 @@
 
 const configuration = {
   port: 8080,
+
   playlists: {
     'mon': 'mon.csv', 
     'tue': 'tue.csv', 
@@ -11,16 +12,16 @@ const configuration = {
     'sat': 'sat.csv', 
     'sun': 'sun.csv'
   },
-
-  tagMapping: {
-    'Size': 'Image Size',
-    'Duration': 'Duration'
-  },
+  
+  // No space allowed in tags
+  tags: ['ImageSize', 'Description'],
 
   environment: {
-    videoExt: '.mp4',
-    plVideoPath: '/home/guillaume/Documents/projets/pl-editor/public/resources',
-    plPath: '/home/guillaume/Documents/projets/pl-editor/public/playlist'
+    filenamePattern: '[A-Z]*_[0-9]*_[0-9]*.mp4',
+    clientApp: '../client/app/',
+    resourceDir: '/home/guillaume/Documents/projets/ng-pl-editor/resource',
+    plPath: '/home/guillaume/Documents/projets/ng-pl-editor/resource/playlist',
+    videoRoute: 'video'
   }
 };
 

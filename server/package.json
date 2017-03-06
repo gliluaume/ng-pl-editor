@@ -1,6 +1,6 @@
 {
   "name": "pl-editor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "video playlist editor",
   "main": "server.js",
   "scripts": {
@@ -21,6 +21,7 @@
     "date-format": "^1.0.0",
     "express": "^4.14.1",
     "mocha": "^3.2.0",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "underscore": "^1.8.3"
   }
 }
