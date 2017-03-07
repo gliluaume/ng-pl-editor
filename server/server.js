@@ -3,6 +3,7 @@
   TODO in next versions
 
   - check playlist length (timelength) before writing file
+  - put arch playlist in a zip file
 
   Tests:
    - patch with unknown trackId
@@ -106,6 +107,7 @@ app.get('/api/playlist/:day', (req, res) => {
 
 app.patch('/api/playlist/:day', (req, res) => {
   console.log('patch playlist');
+  var resBody = 'ok';
   try {
     let filepaths = plRepo.savePlaylist(req.params.day, req.body);
   } catch(e){

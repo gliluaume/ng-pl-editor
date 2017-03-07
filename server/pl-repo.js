@@ -110,11 +110,32 @@ var configurePlRepo = function(cfgModule) {
           return acc + '\n' + elt;
         });
       } 
-
+      console.log('writePlaylistFile', playlistpath);
       fs.writeFile(playlistpath, text, (err) => {
         if (err) throw err;
         console.log('file saved.');
         if(callback) callback();
+      });
+    },
+
+    archivePlaylistFile: function(day) {
+      return new Promise((resolve, reject) => {
+        let playlistpath = path.join(cfg.environment.plPath, cfg.playlists[day]);
+        let formattedDate = dateFormat.asString('yyyy-MM-dd-hhmmss.SSS', new Date());
+        let newName = `${playlistpath}-${formattedDate}`;
+        console.log('rename old file to ', newName);
+        fs.rename(playlistpath, newName, function() {
+          let zipName = playlistpath.replace(/.csv$/, '.zip');
+          let cmdPrms = `zip -m ${zipName} ${cfg.environment.plPath}/${cfg.playlists[day]}-*`;
+          console.log('zip action cmdPrms', cmdPrms);
+          exec(cmdPrms, (error, stdout, stderr) => {
+            if (error) {
+              console.error(`exec error: ${error}`);
+              reject();
+            }
+            resolve(stdout);
+          });
+        });
       });
     },
 
@@ -136,14 +157,17 @@ var configurePlRepo = function(cfgModule) {
       }
     },
 
-    writePlaylist: function(playlistpath, trackpaths, callback) {
-      console.log('writePlaylist in', playlistpath, trackpaths);
+    writePlaylist: function(day, trackpaths, callback) {
+      let playlistpath = path.join(cfg.environment.plPath, cfg.playlists[day]);
+      console.log('writePlaylist in', day, trackpaths);
       if(fs.existsSync(playlistpath)) {
-        let formattedDate = dateFormat.asString('yyyy-MM-dd-hhmmss.SSS', new Date());
-        let newName = `${playlistpath}-${formattedDate}`;
-        console.log('rename old file to ', newName);
-        fs.rename(playlistpath, newName, function() {
+        plRepo.archivePlaylistFile(day)
+        .then((data) => { 
+          console.log(data); 
           plRepo.writePlaylistFile(playlistpath, trackpaths, callback);
+        })
+        .catch((error) => { 
+          console.log(error); 
         });
       } 
       else {
@@ -158,9 +182,8 @@ var configurePlRepo = function(cfgModule) {
       } 
 
       console.log('cfg', cfg, 'day', day, 'trackIds', trackIds);
-      let playlistpath = path.join(cfg.environment.plPath, cfg.playlists[day]);
       var trackpaths = plRepo.calculatePlaylist(day, trackIds);
-      plRepo.writePlaylist(playlistpath, trackpaths, () => {
+      plRepo.writePlaylist(day, trackpaths, () => {
         return trackpaths;
       });
     }
