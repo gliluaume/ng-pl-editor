@@ -13,13 +13,7 @@ angular
   controller: ['playlistService', 'trackPickerService','configuratorService', function(playlistService, trackPickerService, configuratorService) {
     this.addedTracks = [];
     this.cfg = configuratorService.values;
-    // this.sortableOptions = {
-    //   update: function(e, ui) { 
-    //     console.log('hola', e, ui);
-    //    },
-    //   axis: 'x'
-    // };
-
+    this.sortableOptions = {};
     this.availableTracks = trackPickerService.query();
     this.availableSpace = playlistService.availableSpace;
     this.pl = playlistService.playlist;
