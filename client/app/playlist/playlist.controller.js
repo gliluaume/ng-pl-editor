@@ -9,7 +9,14 @@ angular
   var insertionIndex = 0;
   $scope.days = playlistService.createDaysLocal();
   $scope.selectedDay = $scope.days[1];
-  // $scope.playlist = playlistService.playlist;
+
+  $scope.sortableOptions = {
+    stop: function(e, ui) {
+      console.log("stop", e, ui);
+      $scope.playlist = playlistService.buildPlaylist($scope.playlist.map((item) => { return item.id; }), $scope.playlist);
+    }
+  };
+
   $scope.playlist = [];
   $scope.cfg = configuratorService.values;
 

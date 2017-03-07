@@ -5,5 +5,6 @@ angular
   'plEditor.trackPicker',
   'plEditor.configurator',
   'ui.bootstrap',
-  'ui.bootstrap.tpls'
+  'ui.bootstrap.tpls',
+  'ui.sortable'
 ]);
