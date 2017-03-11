@@ -64,7 +64,7 @@ A<nav navbar-affix class="navbar navbar-default">
             <td>
               <div class="media">
                 <div class="media-left" data-ng-show="cfg.showVideoInPlaylist" >
-                  <video width="{{ cfg.videoHeight }}" height="120" controls>
+                  <video width="{{ cfg.videoHeight }}" height="120" controls preload="none">
                     <source data-ng-src="{{ track.filepath }}" type="video/mp4">
                     Your browser does not support the video tag.
                   </video> 
