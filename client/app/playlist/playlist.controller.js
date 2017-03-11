@@ -50,6 +50,15 @@ angular
   $scope.onDayChange();
 
   $scope.remove = function(trackIndex) {
+    console.log('configuratorService.values.confirmAction', configuratorService.values.confirmAction);
+    if(configuratorService.values.confirmAction) {
+      openConfirm(removeTrack, [trackIndex]);
+    } else {
+      removeTrack(trackIndex);
+    }
+  }
+
+  var removeTrack = function(trackIndex) {
     var tracksPromise = trackPickerService.query().$promise
     .then(function(availableTracks) {
       console.log(availableTracks);
@@ -60,19 +69,32 @@ angular
       $scope.playlist = playlistService.buildPlaylist(tmp, availableTracks);
       setMetadata();
     });
-  }
+  } 
+
+  // confirm modal management
+  var openConfirm = function(action, args) {
+    var modalInstance = $uibModal.open({
+      animation: $scope.cfg.animationsEnabled,
+      component: 'confirmator'
+    });
+
+    modalInstance.result.then(function(confirmed) {
+      console.log('confirmed', confirmed);
+      if(confirmed)
+        action.apply(null, args);
+    }, function () {
+      console.info('track-picker dismissed at: ' + new Date());
+    });
+  };
 
   // track picker management
-  $scope.close = function() {
-    console.log('close');
-  }
-
   $scope.openPicker = function(plIndex) {
     insertionIndex = plIndex;
     console.log('plIndex', plIndex);
     var modalInstance = $uibModal.open({
       animation: $scope.cfg.animationsEnabled,
-      component: 'picker'
+      component: 'picker',
+      size: 'lg'
     });
 
     modalInstance.result.then(function (selectedTracks) {

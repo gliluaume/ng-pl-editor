@@ -4,6 +4,7 @@ angular
   'ngResource',
   'plEditor.trackPicker',
   'plEditor.configurator',
+  'plEditor.confirmation',
   'ui.bootstrap',
   'ui.bootstrap.tpls',
   'ui.sortable'
