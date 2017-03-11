@@ -1,0 +1,18 @@
+<table class="table table-hover">
+  <thead>
+    <th>début</th>
+    <th>durée</th>
+    <th>type</th>
+    <th>id</th>
+    <th>titre</th>
+  </thead>
+  <tbody data-ng-model="playlist" ui-sortable="sortableOptions">
+    <tr data-ng-repeat="track in playlist track by $index">
+      <td><span>{{ track.literalStart }}</span></td>
+      <td>{{ track.duration |duration }}</td>
+      <td>{{ track.typeDesc }}</td>
+      <td>{{ track.id }}</td>
+      <td>{{ track.title }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -124,6 +124,7 @@ angular
     }
     return 0;
   }
+  svc.secondsToHours = secondsToHours;
 
   return svc;
 }])

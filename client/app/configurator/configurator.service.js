@@ -3,7 +3,7 @@ angular.module('plEditor.configurator')
 .service('configuratorService', [function() {
   var svc = {
     values : {
-      showVideoInPlaylist: true,
+      showVideoInPlaylist: false,
       confirmAction: true,
       animationsEnabled: true,
       videoHeight: 120,
