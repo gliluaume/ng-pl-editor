@@ -10,7 +10,7 @@
         <table class="table table-stripped">
           <tr data-ng-model="$ctrl.addedTracks" ui-sortable="sortableOptions">
             <td class="media" style="border:0px" data-ng-repeat="t in $ctrl.addedTracks track by $index">
-              <video width="80" height="60" controls>
+              <video width="80" height="60" controls preload="none">
               <source data-ng-src="{{ t.filepath }}" type="video/mp4">
               Your browser does not support the video tag.
               </video>
