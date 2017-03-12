@@ -36,3 +36,14 @@
     -o-transition: width .6s ease;
     transition: width .6s ease;
 }
+
+.stick-up {
+  position: relative;
+  top: -0.9em;
+  left: 1em;
+}
+.stick-bottom {
+  position: relative;
+  bottom: -0.9em;
+  right: 1em;
+}
