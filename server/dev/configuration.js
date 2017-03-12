@@ -14,7 +14,7 @@ const configuration = {
   },
 
   // No space allowed in tags
-  tags: ['ImageSize', 'Description'],
+  tags: ['ImageSize', 'Description', 'title'],
 
   environment: {
     filenamePattern: '[A-Z]*_[0-9]*_[0-9]*.mp4',
