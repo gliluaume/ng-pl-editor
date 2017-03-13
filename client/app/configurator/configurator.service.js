@@ -7,9 +7,7 @@ angular.module('plEditor.configurator')
       showVideoInPicker: true,
       compactVue: true,
       confirmAction: true,
-      animationsEnabled: true,
-      videoHeight: 120,
-      videoWidth: 160
+      animationsEnabled: true
     }
   };
   return svc;

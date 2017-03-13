@@ -1,7 +1,6 @@
 'use strict';
 
-angular
-.module('plEditor.playlist')
+angular.module('plEditor.playlist')
 .service('playlistService', ['$filter', function($filter) {
   var plStartTime = 21600;
   // var plEndTime = 86400;
@@ -50,6 +49,7 @@ angular
 
   var svc = {};
   svc.playlist = [];
+  svc.metadata = {};
   svc.playlistStart = plStartTime;
   svc.playlistEnd = plEndTime;
 
@@ -86,7 +86,8 @@ angular
       console.log('enrichedPlaylist', enrichedPlaylist, enrichedPlaylist.length);
     }
     svc.playlist = enrichedPlaylist;
-
+    svc.setMetadata();
+    console.log('svc.metadata', svc.metadata);
     return svc.playlist;
   };
 
@@ -124,6 +125,16 @@ angular
     }
     return 0;
   }
+
+  svc.setMetadata = function() {
+    var plRate = svc.plRate(svc.playlist);
+    svc.metadata.values = { 
+      range : svc.plRange(svc.playlist), 
+      rate : plRate,
+      isMaxSizeReached: plRate >= 100
+    };
+  }
+
   svc.secondsToHours = secondsToHours;
 
   return svc;

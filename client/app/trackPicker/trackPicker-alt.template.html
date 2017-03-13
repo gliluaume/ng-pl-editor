@@ -1,0 +1,110 @@
+<div class="modal-content">
+  <div class="modal-header">
+
+    <div class="row">
+      <div class="col-xs-6">  
+        <h3 class="modal-title" id="modal-title">Sélection</h3>    
+      </div>
+      <div class="col-xs-6">
+        <input class="form-control pull-right" type="text" name="search" data-ng-model="trackSearch" placeholder="Recherche textuelle">
+      </div>    
+    </div>  
+  </div>
+  <div class="modal-body" id="picker-body">
+
+    <div class="row">
+      <div class="col-xs-12 scroll-x">
+        <div data-ng-model="$ctrl.addedTracks" ui-sortable="sortableOptions">
+          <div class="media" style="display: inline-block;padding-right: 0.6em;" data-ng-repeat="t in $ctrl.addedTracks track by $index">
+            <table>
+              <tr>
+                <td>
+                  [{{ t.id }}]
+                </td>
+                <td class="pull-right">
+                  <i class="fa fa-minus" style="color:red" aria-hidden="true" role="button" data-ng-click="$ctrl.remove($index)"></i>
+                </td>
+              </tr>
+              <tr data-ng-show="$ctrl.cfg.showVideoInPicker">
+                <td colspan="2">
+                <video data-ng-show="$ctrl.cfg.showVideoInPicker" width="80" height="60" controls preload="none">
+                  <source data-ng-src="{{ t.filepath }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!--     <div class="row">
+      <div class="col-xs-12 scroll-x">
+        <table class="table table-stripped">
+          <tr data-ng-model="$ctrl.addedTracks" ui-sortable="sortableOptions">
+            <td class="media" style="border:0px" data-ng-repeat="t in $ctrl.addedTracks track by $index">
+            <table>
+              <tr>
+                <td>
+                  [{{ t.id }}]
+                </td>
+                <td class="pull-right">
+                  <i class="fa fa-minus" style="color:red" aria-hidden="true" role="button" data-ng-click="remove($index)"></i>
+                </td>
+              </tr>
+              <tr data-ng-show="$ctrl.cfg.showVideoInPicker">
+                <td colspan="2">
+                <video data-ng-show="$ctrl.cfg.showVideoInPicker" width="80" height="60" controls preload="none">
+                  <source data-ng-src="{{ t.filepath }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                </td>
+              </tr>
+            </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+ -->
+
+    <div class="row">
+      <div class="col-xs-12">
+        <table class="table table-hover">
+          <thead>
+            <th data-ng-show="$ctrl.cfg.showVideoInPicker">vidéo</th>
+            <th>durée</th>
+            <th>type</th>
+            <th>id</th>
+            <th>titre</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr class="media" data-ng-repeat="track in $ctrl.availableTracks | filter:trackSearch">
+              <td data-ng-show="$ctrl.cfg.showVideoInPicker">
+                <video width="{{ $ctrl.cfg.videoWidth }}px" height="{{ $ctrl.cfg.videoHeight }}px" controls  preload="none">
+                  <source data-ng-src="{{ track.filepath }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </td>
+              <td>{{ track.duration }}</td>
+              <td>{{ track.typeDesc }}</td>
+              <td>{{ track.id }}</td>
+              <td>{{ track.title }}</td>
+              <td>
+                <button class="btn btn-default" type="button" id="addItem" data-ng-click="$ctrl.addTrack(track)" data-ng-disabled="!$ctrl.addAllowed">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-ng-click="$ctrl.ok()">confirmer</button>
+    <button type="button" class="btn btn-default" data-ng-click="$ctrl.cancel()">annuler</button>
+  </div>
+</div>

@@ -1,7 +1,6 @@
 'use strict';
 
-angular
-.module('plEditor.trackPicker')
+angular.module('plEditor.trackPicker')
 .component('picker', {
   templateUrl: 'trackPicker/trackPicker-alt.template.html',
   
@@ -10,13 +9,12 @@ angular
     close: '&' 
   },
 
-  controller: ['playlistService', 'trackPickerService','configuratorService', function(playlistService, trackPickerService, configuratorService) {
+  controller: ['playlistService', 'trackPickerStockService','configuratorService', function(playlistService, trackPickerStockService, configuratorService) {
     this.addedTracks = [];
     this.cfg = configuratorService.values;
     this.sortableOptions = {};
-    this.availableTracks = trackPickerService.query();
+    this.availableTracks = trackPickerStockService.tracks;
     this.availableSpace = playlistService.availableSpace;
-    this.pl = playlistService.playlist;
     this.addAllowed = true;
 
     let self = this;
@@ -31,7 +29,6 @@ angular
     self.addTrack = function(track) {
       console.log('adding track', track);
       self.addedTracks.push(track);
-      console.log(self.pl.length);
       console.log('available space', playlistService.availableSpace());
       setAddAllowed();
     };
@@ -42,10 +39,7 @@ angular
 
     self.ok = function () {
       self.close({ 
-        $value: {
-          addedTracks: self.addedTracks.map(function(item) { return item.id; }),
-          availableTracks: self.availableTracks
-        }
+        $value:  self.addedTracks.map(function(item) { return item.id; })
       });
     };
 
