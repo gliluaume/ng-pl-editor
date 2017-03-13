@@ -3,7 +3,7 @@
 angular
 .module('plEditor.trackPicker')
 .component('picker', {
-  templateUrl: 'trackPicker/trackPicker.template.html',
+  templateUrl: 'trackPicker/trackPicker-alt.template.html',
   
   bindings: {
     dismiss: '&',  // angular-ui built in function
@@ -21,8 +21,6 @@ angular
 
     let self = this;
     var setAddAllowed = function() {
-      // console.log('allowed', typeof self.stackLength, typeof self.availableSpace().seconds);
-      // console.log('allowed', self.stackLength < self.availableSpace().seconds);
       var stackLength = self.addedTracks.reduce(function(acc, item) { 
         return acc + item.duration;
       }, 0);
@@ -36,6 +34,10 @@ angular
       console.log(self.pl.length);
       console.log('available space', playlistService.availableSpace());
       setAddAllowed();
+    };
+
+    self.remove = function(index) {
+      console.log('index', index);
     };
 
     self.ok = function () {

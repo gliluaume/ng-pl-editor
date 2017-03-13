@@ -4,6 +4,8 @@ angular.module('plEditor.configurator')
   var svc = {
     values : {
       showVideoInPlaylist: false,
+      showVideoInPicker: true,
+      compactVue: true,
       confirmAction: true,
       animationsEnabled: true,
       videoHeight: 120,

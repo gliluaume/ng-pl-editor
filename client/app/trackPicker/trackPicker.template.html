@@ -22,7 +22,7 @@
         <ul>
           <li class="media" data-ng-repeat="track in $ctrl.availableTracks">
             <div class="media-left">
-              <video width="{{ $ctrl.cfg.videoWidth }}px" height="{{ $ctrl.cfg.videoHeight }}px" controls  preload="none">
+              <video width="{{ $ctrl.cfg.videoWidth }}px" height="{{ $ctrl.cfg.videoHeight }}px" controls preload="none">
                 <source data-ng-src="{{ track.filepath }}" type="video/mp4">
                 Your browser does not support the video tag.
               </video> 

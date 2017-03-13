@@ -4,7 +4,7 @@
   overflow-y: auto;
 }
 
-.test {
+.scroll-x {
   width: 100%;
   overflow-x: auto;
 }
@@ -47,3 +47,9 @@
   bottom: -0.9em;
   right: 1em;
 }
+
+/* TODO Suppr
+div.inline {
+  display: inline-block;
+  padding-right: 0.1em;
+}*/
