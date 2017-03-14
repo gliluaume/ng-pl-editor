@@ -17,7 +17,7 @@ const configuration = {
   tags: ['ImageSize', 'Description', 'title'],
 
   environment: {
-    dirnamePattern: /^test-[ab]/,
+    dirnamePattern: /^test-[a-z]/,
     filenamePattern: '[A-Z]*_[0-9]*_[0-9]*.mp4',
     clientApp: '../client/app/',
     commonDir: '/home/guillaume/Documents/projets/ng-pl-editor/resource',

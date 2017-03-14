@@ -60,8 +60,16 @@ var configurePlRepo = function(cfgModule) {
     },
 
     isInitialized: function() {
-      console.log('test', plRepo.tracks !== null);
       return plRepo.tracks !== null;
+    },
+
+    countVideoFiles: function(dir) {
+      return fs.readdirSync(dir)
+      .filter(item => {
+        console.log("fichier", item);
+        return !!item.match(new RegExp(cfg.environment.filenamePattern));
+      })
+      .length;
     },
 
     buildTrackSetDir: function(dir, origin) {
@@ -72,16 +80,21 @@ var configurePlRepo = function(cfgModule) {
           return acc + `-${item} `
         }, '');
 
-        // TODO gérer le cas où il n'y a pas de vidéo : pas d'erreur
-        cmdPrms = `exiftool -json ${cmdPrms}${dir}/${cfg.environment.filenamePattern}`
-        console.log(cmdPrms);
-        exec(cmdPrms, (error, stdout, stderr) => {
-          if (error) {
-            console.error(`exec error: ${error}`);
-            reject();
-          }
-          resolve(JSON.parse(stdout).map(treatMetadata(origin)));
-        });
+        // exiftool throw error when no file is found
+        if(plRepo.countVideoFiles(dir) <= 0) {
+          console.log('no matching file');
+          resolve([]);
+        } else {
+          cmdPrms = `exiftool -json ${cmdPrms}${dir}/${cfg.environment.filenamePattern}`
+          console.log('cmdPrms', cmdPrms);
+          exec(cmdPrms, (error, stdout, stderr) => {
+            if (error) {
+              console.error(`exec error: ${error}`);
+              reject();
+            }
+            resolve(JSON.parse(stdout).map(treatMetadata(origin)));
+          });
+        }
       });
     },
 
