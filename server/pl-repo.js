@@ -10,9 +10,7 @@ var configurePlRepo = function(cfgModule) {
   const exec = require('child_process').exec;
   const path = require('path');
   const cfg = require(cfgModule);
-
-  const videoDir = path.join(cfg.environment.resourceDir, cfg.environment.videoRoute);
-  console.log('videoDir', videoDir);
+  const videoDir = path.join(cfg.environment.commonDir, cfg.environment.videoRoute);
 
   var lowerFirst = function(strValue) {
     if(!strValue || (strValue.length === 0)) 
@@ -33,48 +31,73 @@ var configurePlRepo = function(cfgModule) {
     return ret;
   };
 
-  var treatMetadata = function(metadata) {
-    var trackInfos = camelCaseProp(metadata);
-    var filename = path.basename(metadata['SourceFile']);
-    var splittedName = filename.split('_');
+  var treatMetadata = function(origin) {
+    return function(metadata) {
+      var trackInfos = camelCaseProp(metadata);
+      var filename = path.basename(metadata['SourceFile']);
+      var splittedName = filename.split('_');
 
-    trackInfos.id = parseInt(splittedName[1], 10);
-    trackInfos.filepath = path.join(cfg.environment.videoRoute, filename);
-    trackInfos.typeDesc = splittedName[0];
-    trackInfos.duration = Math.round(parseInt(splittedName[2].split('.')[0], 10) / 1000),
-    delete trackInfos.sourceFile; 
+      trackInfos.id = parseInt(splittedName[1], 10);
+      trackInfos.filepath = path.join(cfg.environment.videoRoute, filename);
+      trackInfos.typeDesc = splittedName[0];
+      trackInfos.duration = Math.round(parseInt(splittedName[2].split('.')[0], 10) / 1000);
+      trackInfos.origin = origin;
+      console.log('origin', origin);
+      delete trackInfos.sourceFile; 
 
-    return trackInfos;
+      return trackInfos;
+    };
   };
+
 
   var plRepo = {
     tracks: null,
+
+    listDirs: function(dirpath) {
+      if(!fs.statSync(dirpath).isDirectory()) throw 'directory expected !';
+      return fs.readdirSync(dirpath)
+      .filter(i => fs.statSync(path.join(dirpath, i)).isDirectory() && !!i.match(cfg.environment.dirnamePattern));
+    },
 
     isInitialized: function() {
       console.log('test', plRepo.tracks !== null);
       return plRepo.tracks !== null;
     },
 
-    buildTrackSet: function() {
+    buildTrackSetDir: function(dir, origin) {
+      console.log('buildTrackSetDir', dir, origin);
+
       return new Promise((resolve, reject) => {
         var cmdPrms = cfg.tags.reduce(function(acc, item) {
           return acc + `-${item} `
         }, '');
 
-        cmdPrms = `exiftool -json ${cmdPrms}${videoDir}/${cfg.environment.filenamePattern}`
+        // TODO gérer le cas où il n'y a pas de vidéo : pas d'erreur
+        cmdPrms = `exiftool -json ${cmdPrms}${dir}/${cfg.environment.filenamePattern}`
         console.log(cmdPrms);
         exec(cmdPrms, (error, stdout, stderr) => {
           if (error) {
             console.error(`exec error: ${error}`);
             reject();
           }
-          resolve(JSON.parse(stdout).map(treatMetadata));
+          resolve(JSON.parse(stdout).map(treatMetadata(origin)));
         });
       });
     },
 
-    calculatePlaylist: function(day, trackIds) {
-      let playlistFile = path.join(cfg.environment.plPath, cfg.playlists[day]);
+    buildTrackSet: function() {
+      var promises = [plRepo.buildTrackSetDir(videoDir, 'cmn')];
+
+      plRepo.listDirs(cfg.environment.customPath)
+      .forEach(dirname => {
+        var dirpath = path.join(cfg.environment.customPath, dirname);
+        promises.push(plRepo.buildTrackSetDir(dirpath, dirname));
+      });
+      return Promise.all(promises);
+    },
+
+    calculatePlaylist: function(dir, day, trackIds) {
+      let playlistFile = path.join(cfg.environment.customPath, dir, cfg.playlists[day]);
 
       var playlistDesc = {};
       plRepo.tracks.forEach(function(track) {
@@ -118,15 +141,15 @@ var configurePlRepo = function(cfgModule) {
       });
     },
 
-    archivePlaylistFile: function(day) {
+    archivePlaylistFile: function(dir, day) {
       return new Promise((resolve, reject) => {
-        let playlistpath = path.join(cfg.environment.plPath, cfg.playlists[day]);
+        let playlistpath = path.join(cfg.environment.customPath, dir, cfg.playlists[day]);
         let formattedDate = dateFormat.asString('yyyy-MM-dd-hhmmss.SSS', new Date());
         let newName = `${playlistpath}-${formattedDate}`;
         console.log('rename old file to ', newName);
         fs.rename(playlistpath, newName, function() {
           let zipName = playlistpath.replace(/.csv$/, '.zip');
-          let cmdPrms = `zip -m ${zipName} ${cfg.environment.plPath}/${cfg.playlists[day]}-*`;
+          let cmdPrms = `zip -m ${zipName} ${playlistpath}-*`;
           console.log('zip action cmdPrms', cmdPrms);
           exec(cmdPrms, (error, stdout, stderr) => {
             if (error) {
@@ -139,8 +162,10 @@ var configurePlRepo = function(cfgModule) {
       });
     },
 
-    readPlaylist: function(day, callback) {
-      let filepath = path.join(cfg.environment.plPath, cfg.playlists[day]);
+    readPlaylist: function(dir, day, callback) {
+      if(!dir.match(cfg.environment.dirnamePattern)) throw 'invalid file name';
+
+      let filepath = path.join(cfg.environment.customPath, dir, cfg.playlists[day]);
       console.log('playlist filepath', filepath);
       if(!fs.existsSync(filepath)) {
         if(callback) callback([]);
@@ -157,11 +182,11 @@ var configurePlRepo = function(cfgModule) {
       }
     },
 
-    writePlaylist: function(day, trackpaths, callback) {
-      let playlistpath = path.join(cfg.environment.plPath, cfg.playlists[day]);
-      console.log('writePlaylist in', day, trackpaths);
+    writePlaylist: function(dir, day, trackpaths, callback) {
+      let playlistpath = path.join(cfg.environment.customPath, dir, cfg.playlists[day]);
+      console.log('writePlaylist in', dir, day, trackpaths);
       if(fs.existsSync(playlistpath)) {
-        plRepo.archivePlaylistFile(day)
+        plRepo.archivePlaylistFile(dir, day)
         .then((data) => { 
           console.log(data); 
           plRepo.writePlaylistFile(playlistpath, trackpaths, callback);
@@ -176,14 +201,14 @@ var configurePlRepo = function(cfgModule) {
       }
     },
 
-    savePlaylist: function(day, trackIds) {
+    savePlaylist: function(dir, day, trackIds) {
       if(!plRepo.isInitialized()) {
         throw 'plRepo is not isInitialized !';
       } 
 
       console.log('cfg', cfg, 'day', day, 'trackIds', trackIds);
-      var trackpaths = plRepo.calculatePlaylist(day, trackIds);
-      plRepo.writePlaylist(day, trackpaths, () => {
+      var trackpaths = plRepo.calculatePlaylist(dir, day, trackIds);
+      plRepo.writePlaylist(dir, day, trackpaths, () => {
         return trackpaths;
       });
     }

@@ -55,29 +55,27 @@
     'sun' : [7]
   };
 */
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
 
 var configFile = process.argv[2];
 if(!configFile){
   configFile = './configuration.js';
 }
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
 const trace = require('./logger');
 const resources = path.join(__dirname, 'public');
 const app = express();
 const cfg = require(configFile);
 const plRepo = require('./pl-repo')(configFile);
 
+console.log('configuration', cfg);
+
 plRepo.buildTrackSet()
 .then(function(arrayOfArrays) {
-  // console.log('arrayOfArrays', arrayOfArrays.length, arrayOfArrays);
   plRepo.tracks = arrayOfArrays.reduce((acc, item) => [...acc, ...item]);
   console.log('plRepo.tracks', plRepo.tracks);
-  // var tracksInfos = [];
-  // arrayOfArrays.forEach(array => { tracksInfos = [...tracksInfos, ...array] });
-  // console.log('tracksInfos', tracksInfos);
 })
 .catch(function(error) {
   console.log(error);
