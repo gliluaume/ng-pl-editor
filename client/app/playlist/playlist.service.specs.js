@@ -24,7 +24,7 @@ describe('PlaylistRepoService', function() {
   // Instantiate the service and "train" `$httpBackend` before each test
   beforeEach(inject(function(_$httpBackend_, _playlistRepoService_) {
     $httpBackend = _$httpBackend_;
-    $httpBackend.expectGET('/api/playlist/mon').respond(playlists['mon']);
+    $httpBackend.expectGET('/api/playlist/test/mon').respond(playlists['mon']);
 
     playlistRepoService = _playlistRepoService_;
   }));
@@ -36,7 +36,7 @@ describe('PlaylistRepoService', function() {
   });
 
   it('should fetch the playlist data from `/api/playlist/:day`', function() {
-    var mondayPlaylist = playlistRepoService.get({ day: 'mon' });
+    var mondayPlaylist = playlistRepoService.get({ dir: 'test', day: 'mon' });
 
     expect(mondayPlaylist).toEqual([]);
 

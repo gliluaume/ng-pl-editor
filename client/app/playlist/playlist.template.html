@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-affix">
   <div class="container-fluid">
     <div class="row">
       <div class="col-xs-3 toolbar">
@@ -14,22 +14,27 @@
                   <i data-ng-show="!!saving.value" class="fa fa-spin fa-spinner fa-life-ring fa-fw" ></i>
                 </button>
               </span> 
-              <select class="form-control" 
+              <select class="form-control half" 
+                data-ng-model="selectedDir" 
+                data-ng-options="dir for dir in directories"
+                data-ng-change="onSelectionChange()">
+              </select>
+              <select class="form-control half" 
                 data-ng-model="selectedDay" 
                 data-ng-options="day as day.label for day in days"
-                data-ng-change="onDayChange()">
+                data-ng-change="onSelectionChange()">
               </select>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-2 col-sm-4 col-xs-6">
+          <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
             <span class="label label-primary">{{ metadata.values.range }}</span>
           </div>
-          <div class="col-md-1 col-sm-1 col-xs-2">
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">
             <span class="label label-primary">{{ playlist.length }}</span>
           </div>
-          <div class="col-md-9 col-sm-7 col-xs-4">
+          <div class="col-lg-9 col-md-8 col-sm-7 col-xs-4">
             <div class="pl-progress">
               <div class="pl-progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ metadata.values.rate }}%;">
                 {{ metadata.values.rate }} %

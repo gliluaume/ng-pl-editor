@@ -4,6 +4,7 @@ angular.module('plEditor.playlist')
 
 .controller('playlistController', ['$scope', '$uibModal', 'playlistService', 'playlistRepoService', 'configuratorService', 'trackPickerStockService',
   function playlistController($scope, $uibModal, playlistService, playlistRepoService, configuratorService, trackPickerStockService) {
+
   $scope.days = playlistService.createDaysLocal();
   $scope.selectedDay = $scope.days[1];
   $scope.playlist = [];
@@ -13,7 +14,10 @@ angular.module('plEditor.playlist')
 
   $scope.$watch('loaded.state', function(state) {
     if(state){
-      $scope.onDayChange();
+      console.log('watch state', state, $scope.loaded, trackPickerStockService);
+      $scope.directories = trackPickerStockService.directories;
+      $scope.selectedDir = $scope.directories[0];
+      $scope.onSelectionChange();
     }
   });
 
@@ -24,9 +28,9 @@ angular.module('plEditor.playlist')
     }
   };
 
-  $scope.onDayChange = function() {
+  $scope.onSelectionChange = function() {
     console.log('day changed to', $scope.selectedDay);
-    playlistRepoService.get({ day: $scope.selectedDay.apiAlias }).$promise
+    playlistRepoService.get({ dir: $scope.selectedDir, day: $scope.selectedDay.apiAlias }).$promise
     .then(function(data) {
       $scope.playlist = playlistService.buildPlaylist(data, trackPickerStockService.tracks);
     })
@@ -46,7 +50,7 @@ angular.module('plEditor.playlist')
   }
 
   var removeTrack = function(trackIndex) {
-    let plAsIntArray = $scope.playlist.map(function(enrichedTrack) { return enrichedTrack.id; });
+    let plAsIntArray = $scope.playlist.map((enrichedTrack) => enrichedTrack.id);
     let tmp = plAsIntArray.slice(0, trackIndex);
     Array.prototype.push.apply(tmp, plAsIntArray.slice(trackIndex + 1));
     console.log('playlist raw', tmp);
@@ -77,11 +81,12 @@ angular.module('plEditor.playlist')
     var modalInstance = $uibModal.open({
       animation: $scope.cfg.animationsEnabled,
       component: 'picker',
-      size: 'lg'
+      size: 'lg',
+      resolve: { selectedDir: () => $scope.selectedDir }
     });
 
     modalInstance.result.then(function(addedTracks) {
-      let plAsIntArray = $scope.playlist.map(function(enrichedTrack) { return enrichedTrack.id; });
+      let plAsIntArray = $scope.playlist.map((enrichedTrack) => enrichedTrack.id );
       var tmp = [...(plAsIntArray.slice(0, insertionIndex)), ...addedTracks, ...(plAsIntArray.slice(insertionIndex))];
       $scope.playlist = playlistService.buildPlaylist(tmp, trackPickerStockService.tracks);
     }, function () {
@@ -93,8 +98,8 @@ angular.module('plEditor.playlist')
   $scope.saving.value=false;
   $scope.savePlaylist = function() {
     $scope.saving.value = true;
-    let trackIds = $scope.playlist.map(function(track) { return track.id; });
-    playlistRepoService.patch({ day: $scope.selectedDay.apiAlias }, trackIds).$promise
+    let trackIds = $scope.playlist.map((track) => track.id);
+    playlistRepoService.patch({ dir: $scope.selectedDir, day: $scope.selectedDay.apiAlias }, trackIds).$promise
     .then(function(data){
       console.log(data);
       $scope.saving.value = false;

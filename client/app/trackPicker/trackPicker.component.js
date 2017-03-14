@@ -2,44 +2,48 @@
 
 angular.module('plEditor.trackPicker')
 .component('picker', {
-  templateUrl: 'trackPicker/trackPicker-alt.template.html',
+  templateUrl: 'trackPicker/trackPicker.template.html',
   
   bindings: {
+    resolve: '<',
     dismiss: '&',  // angular-ui built in function
     close: '&' 
   },
 
   controller: ['playlistService', 'trackPickerStockService','configuratorService', function(playlistService, trackPickerStockService, configuratorService) {
-    this.addedTracks = [];
+    this.tracksToAdd = [];
     this.cfg = configuratorService.values;
     this.sortableOptions = {};
-    this.availableTracks = trackPickerStockService.tracks;
     this.availableSpace = playlistService.availableSpace;
     this.addAllowed = true;
 
     let self = this;
-    var setAddAllowed = function() {
-      var stackLength = self.addedTracks.reduce(function(acc, item) { 
-        return acc + item.duration;
-      }, 0);
+    this.$onInit = function() {
+      self.selectedDir = self.resolve.selectedDir;
+      this.availableTracks = trackPickerStockService.tracks
+      .filter(track => (track.origin === self.selectedDir) || (track.origin === 'cmn'));
+    };
 
+    var setAddAllowed = function() {
+      var stackLength = self.tracksToAdd.reduce((acc, item) => acc + item.duration, 0);
       self.addAllowed = stackLength < self.availableSpace().seconds;
     }
 
     self.addTrack = function(track) {
       console.log('adding track', track);
-      self.addedTracks.push(track);
+      self.tracksToAdd.push(track);
       console.log('available space', playlistService.availableSpace());
       setAddAllowed();
     };
 
     self.remove = function(index) {
-      console.log('index', index);
+      self.tracksToAdd = [...self.tracksToAdd.slice(0, index), ...self.tracksToAdd.slice(index + 1)];
+      console.log('index', index, self.tracksToAdd);
     };
 
-    self.ok = function () {
+    self.ok = function() {
       self.close({ 
-        $value:  self.addedTracks.map(function(item) { return item.id; })
+        $value:  self.tracksToAdd.map((item) => item.id)
       });
     };
 

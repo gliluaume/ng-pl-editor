@@ -71,9 +71,13 @@ const cfg = require(configFile);
 const plRepo = require('./pl-repo')(configFile);
 
 plRepo.buildTrackSet()
-.then(function(tracksInfos) {
-  console.log('tracksInfos', tracksInfos);
-  plRepo.tracks = tracksInfos;
+.then(function(arrayOfArrays) {
+  // console.log('arrayOfArrays', arrayOfArrays.length, arrayOfArrays);
+  plRepo.tracks = arrayOfArrays.reduce((acc, item) => [...acc, ...item]);
+  console.log('plRepo.tracks', plRepo.tracks);
+  // var tracksInfos = [];
+  // arrayOfArrays.forEach(array => { tracksInfos = [...tracksInfos, ...array] });
+  // console.log('tracksInfos', tracksInfos);
 })
 .catch(function(error) {
   console.log(error);
@@ -82,7 +86,7 @@ plRepo.buildTrackSet()
 app.use(bodyParser.json());
 app.use(trace.req);
 app.use('/', express.static(path.join(__dirname, cfg.environment.clientApp)));
-const videoDir = path.join(cfg.environment.resourceDir, cfg.environment.videoRoute);
+const videoDir = path.join(cfg.environment.commonDir, cfg.environment.videoRoute);
 app.use('/' + cfg.environment.videoRoute, express.static(videoDir));
 
 app.get('/api/track', (req, res) => {
@@ -98,24 +102,28 @@ app.get('/api/track', (req, res) => {
   res.send(plRepo.tracks);
 });
 
-app.get('/api/playlist/:day', (req, res) => {
-  console.log('get playlist');
-  plRepo.readPlaylist(req.params.day, (trackIds) => {
+app.get('/api/playlist/:dir/:day', (req, res) => {
+  console.log('get playlist', req.params.dir, req.params.day);
+  plRepo.readPlaylist(req.params.dir, req.params.day, (trackIds) => {
     res.send(trackIds);
   });
 });
 
-app.patch('/api/playlist/:day', (req, res) => {
+app.patch('/api/playlist/:dir/:day', (req, res) => {
   console.log('patch playlist');
   var resBody = 'ok';
   try {
-    let filepaths = plRepo.savePlaylist(req.params.day, req.body);
+    let filepaths = plRepo.savePlaylist(req.params.dir, req.params.day, req.body);
   } catch(e){
     res.statusCode = 409;
     resBody = e;
     console.log(e);
   }
   res.send(resBody);
+});
+
+app.get('/api/directory', (req, res) => {
+  res.send(plRepo.listDirs(cfg.environment.customPath));
 });
 
 app.listen(cfg.port)

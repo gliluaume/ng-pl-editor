@@ -5,5 +5,6 @@ angular.module('plEditor.trackPicker', [
   'ui.bootstrap.tpls',
   'ngResource',
   'ui.sortable',
-   'plEditor.configurator'
+   'plEditor.configurator',
+   'plEditor.directory'
   ])

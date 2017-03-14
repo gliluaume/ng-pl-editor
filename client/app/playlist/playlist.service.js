@@ -14,9 +14,7 @@ angular.module('plEditor.playlist')
     var padder = (new Array(Math.max(len - text.length, 0) + 1))
       .join(char)
       .split('')
-      .reduce(function(acc, elt){ 
-        return acc + elt
-      });
+      .reduce((acc, elt) => acc + elt);
 
     return padder + text;
   };
@@ -76,9 +74,7 @@ angular.module('plEditor.playlist')
       var enrichedPlaylist = [];
       if(rawPlaylist.length > 0) {
         rawPlaylist.forEach(function(trackId) {
-          var track = tracks.filter(function(track) {
-            return track.id == trackId;
-          }).pop();
+          var track = tracks.filter((track) => track.id == trackId).pop();
           calculateStartTime(track, enrichedPlaylist);
           enrichedPlaylist.push(Object.assign({}, track));
         });
@@ -141,7 +137,7 @@ angular.module('plEditor.playlist')
 }])
 
 .service('playlistRepoService', ['$resource', function($resource) {
-  return $resource('/api/playlist/:day', { day: 'mon'}, {
+  return $resource('/api/playlist/:dir/:day', { dir: 'test-z', day: 'mon' }, {
     get: {
       method: 'GET',
       isArray: true

@@ -2,14 +2,17 @@
 
 angular.module('plEditor.trackPicker')
 
-.service('trackPickerStockService', ['trackPickerService', function(trackPickerService) {
+.service('trackPickerStockService', ['trackPickerService', 'directoryService', function(trackPickerService, directoryService) {
   var svc = {
     loaded: {state: false},
     tracks: [],
+    directories: [],
     load: function() {
-      trackPickerService.query().$promise
+      var promises = [trackPickerService.query().$promise, directoryService.get().$promise];
+      Promise.all(promises)
       .then(function(data) {
-        svc.tracks = data;
+        svc.tracks = data[0];
+        svc.directories = data[1];
         svc.loaded.state = true;
         console.log('track stock loaded');
       })

@@ -17,10 +17,11 @@ const configuration = {
   tags: ['ImageSize', 'Description', 'title'],
 
   environment: {
+    dirnamePattern: /^test-[ab]/,
     filenamePattern: '[A-Z]*_[0-9]*_[0-9]*.mp4',
     clientApp: '../client/app/',
-    resourceDir: '/home/guillaume/Documents/projets/ng-pl-editor/resource',
-    plPath: '/home/guillaume/Documents/projets/ng-pl-editor/resource/playlist',
+    commonDir: '/home/guillaume/Documents/projets/ng-pl-editor/resource',
+    customPath: '/home/guillaume/Documents/projets/ng-pl-editor/resource/custom',
     videoRoute: 'video'
   }
 };

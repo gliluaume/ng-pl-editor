@@ -1,7 +1,7 @@
 'use strict';
 
 const configuration = {
-  port: 8080,
+  port: 8081,
 
   playlists: {
     'mon': 'mon.csv', 
@@ -12,12 +12,12 @@ const configuration = {
     'sat': 'sat.csv', 
     'sun': 'sun.csv'
   },
-  
+
   // No space allowed in tags
   tags: ['ImageSize', 'Description', 'title'],
 
   environment: {
-    dirnamePattern: /^test-[ab]/,
+    dirnamePattern: /^de/,
     filenamePattern: '[A-Z]*_[0-9]*_[0-9]*.mp4',
     clientApp: '../client/app/',
     commonDir: '/home/guillaume/Documents/projets/ng-pl-editor/resource',

@@ -8,7 +8,7 @@
     <th></th>
   </thead>
   <tbody data-ng-model="playlist" ui-sortable="sortableOptions">
-    <tr data-ng-repeat="track in playlist track by $index">
+    <tr class="grabbable" data-ng-repeat="track in playlist track by $index">
       <td><span>{{ track.literalStart }}</span></td>
       <td>{{ track.duration |duration }}</td>
       <td>{{ track.typeDesc }}</td>

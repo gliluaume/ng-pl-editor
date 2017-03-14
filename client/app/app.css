@@ -47,7 +47,14 @@
   bottom: -0.9em;
   right: 1em;
 }
+.half {
+  width: 50% !important;
+}
 
+.grabbable {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+}
 /* TODO Suppr
 div.inline {
   display: inline-block;

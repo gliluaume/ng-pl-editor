@@ -26,3 +26,7 @@ Initialize plRepo to fill tracks description.
 
 ### configuration.js
 Describes video file pattern
+
+## v1.2.0
+ - playlist in customs directories
+ - search tracks in customs directories
