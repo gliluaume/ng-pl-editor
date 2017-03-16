@@ -3,9 +3,9 @@ angular.module('plEditor.configurator')
 .service('configuratorService', [function() {
   var svc = {
     values : {
-      showVideoInPlaylist: false,
-      showVideoInPicker: false,
-      compactVue: true,
+      showVideoInPlaylist: true,
+      showVideoInPicker: true,
+      compactVue: false,
       confirmAction: false,
       animationsEnabled: true
     }

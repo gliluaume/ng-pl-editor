@@ -76,6 +76,8 @@ angular.module('plEditor.playlist')
   // track picker management
   var insertionIndex = 0;
   $scope.openPicker = function(plIndex) {
+    if($scope.metadata.values.isMaxSizeReached) return;
+
     insertionIndex = plIndex;
     console.log('plIndex', plIndex);
     var modalInstance = $uibModal.open({

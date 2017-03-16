@@ -4,7 +4,8 @@ angular.module('plEditor.playlist')
 .service('playlistService', ['$filter', function($filter) {
   var plStartTime = 21600;
   var plEndTime = 86400;
-  //var plEndTime = 25400;
+  // var plEndTime = 25400;
+  var dayLength = 86400;
   var padLeft = function(text, char, len) {
     text = text.toString();
     char = char.toString();
@@ -20,14 +21,20 @@ angular.module('plEditor.playlist')
   };
 
   var secondsToHours = function (secondsFormMidnight) {
-    var hours   = Math.floor(secondsFormMidnight / 3600);
-    var minutes = Math.floor((secondsFormMidnight - (hours * 3600)) / 60);
-    var seconds = secondsFormMidnight - (hours * 3600) - (minutes * 60);
+    var overflowdays = Math.floor(secondsFormMidnight / dayLength);
+    var secondsFormMidnightInDay = secondsFormMidnight % dayLength;
+
+
+    var hours   = Math.floor(secondsFormMidnightInDay / 3600);
+    var minutes = Math.floor((secondsFormMidnightInDay - (hours * 3600)) / 60);
+    var seconds = secondsFormMidnightInDay - (hours * 3600) - (minutes * 60);
 
     hours = padLeft(hours, '0', 2);
     minutes = padLeft(minutes, '0', 2);
     seconds = padLeft(seconds, '0', 2);
 
+    if(overflowdays > 0)
+      return `${hours}:${minutes}:${seconds} + ${overflowdays}`;
     return `${hours}:${minutes}:${seconds}`;
   };
 
@@ -39,6 +46,7 @@ angular.module('plEditor.playlist')
       newTrack.startTime = lastTrack.startTime + lastTrack.duration;
     }
     newTrack.literalStart = secondsToHours(newTrack.startTime);
+    newTrack.literalEnd = secondsToHours(plSecondEnd([newTrack]));
   };
 
   var plSecondEnd = function(playlist) {

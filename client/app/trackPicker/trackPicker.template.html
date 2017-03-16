@@ -27,7 +27,7 @@
                 </tr>
                 <tr data-ng-show="$ctrl.cfg.showVideoInPicker">
                   <td colspan="2" class="grabbable">
-                  <video data-ng-show="$ctrl.cfg.showVideoInPicker" width="80" height="60" controls preload="none">
+                  <video data-ng-show="$ctrl.cfg.showVideoInPicker" width="80px" height="60px" poster="{{ t.poster }}" preload="none">
                     <source data-ng-src="{{ t.filepath }}" type="video/mp4">
                     Your browser does not support the video tag.
                   </video>
@@ -45,6 +45,7 @@
           <thead>
             <th data-ng-show="$ctrl.cfg.showVideoInPicker">vidéo</th>
             <th>durée</th>
+            <th>origine</th>
             <th>type</th>
             <th>id</th>
             <th>titre</th>
@@ -53,12 +54,13 @@
           <tbody>
             <tr class="media" data-ng-repeat="track in $ctrl.availableTracks | filter:trackSearch">
               <td data-ng-show="$ctrl.cfg.showVideoInPicker">
-                <video width="160px" height="120px" controls  preload="none">
+                <video width="160px" height="120px"  poster="{{ track.poster }}" controls  preload="none">
                   <source data-ng-src="{{ track.filepath }}" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
               </td>
               <td>{{ track.duration }}</td>
+              <td>{{ track.origin }}</td>
               <td>{{ track.typeDesc }}</td>
               <td>{{ track.id }}</td>
               <td>{{ track.title }}</td>

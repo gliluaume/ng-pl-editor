@@ -55,6 +55,11 @@
     cursor: grabbing;
     cursor: -webkit-grabbing;
 }
+
+.pointable {
+    cursor: pointer;
+    cursor: -webkit-pointer;
+}
 /* TODO Suppr
 div.inline {
   display: inline-block;

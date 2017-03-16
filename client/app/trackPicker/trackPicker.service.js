@@ -14,7 +14,8 @@ angular.module('plEditor.trackPicker')
         svc.tracks = data[0];
         svc.directories = data[1];
         svc.loaded.state = true;
-        console.log('track stock loaded');
+        console.log('directories loaded', svc.directories);
+        console.log('track stock loaded', svc.tracks);
       })
       .catch(function(error) {
         console.error(error);

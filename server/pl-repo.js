@@ -10,7 +10,7 @@ var configurePlRepo = function(cfgModule) {
   const exec = require('child_process').exec;
   const path = require('path');
   const cfg = require(cfgModule);
-  const videoDir = path.join(cfg.environment.commonDir, cfg.environment.videoRoute);
+  const videoDir = path.join(cfg.environment.resourcePath, cfg.environment.commonDir);
 
   var lowerFirst = function(strValue) {
     if(!strValue || (strValue.length === 0)) 
@@ -38,7 +38,8 @@ var configurePlRepo = function(cfgModule) {
       var splittedName = filename.split('_');
 
       trackInfos.id = parseInt(splittedName[1], 10);
-      trackInfos.filepath = path.join(cfg.environment.videoRoute, filename);
+      trackInfos.filepath = path.join('/', origin, filename);
+      trackInfos.poster = trackInfos.filepath.replace(/.mp4$/, '.jpeg');
       trackInfos.typeDesc = splittedName[0];
       trackInfos.duration = Math.round(parseInt(splittedName[2].split('.')[0], 10) / 1000);
       trackInfos.origin = origin;
@@ -99,7 +100,7 @@ var configurePlRepo = function(cfgModule) {
     },
 
     buildTrackSet: function() {
-      var promises = [plRepo.buildTrackSetDir(videoDir, 'cmn')];
+      var promises = [plRepo.buildTrackSetDir(videoDir, cfg.environment.commonDir)];
 
       plRepo.listDirs(cfg.environment.customPath)
       .forEach(dirname => {

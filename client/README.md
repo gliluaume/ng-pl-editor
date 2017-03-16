@@ -18,3 +18,9 @@ based on `angular-seed` — the seed for AngularJS apps
 ## 0.3
  - playlist in customs directories
  - search tracks in customs directories
+
+## 0.4
+ - add columns origin and end
+ - fix lock adding track as playlist end exceed midnight
+ - show playlist overflow in range tag
+ - add poster in video for faster rendrering and to fix drag n drop 

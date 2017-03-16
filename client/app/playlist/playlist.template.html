@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-affix">
+<nav class="navbar navbar-default" navbar-affix>
   <div class="container-fluid">
     <div class="row">
       <div class="col-xs-3 toolbar">
@@ -29,14 +29,14 @@
         </div>
         <div class="row">
           <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
-            <span class="label label-primary">{{ metadata.values.range }}</span>
+            <span class="label label-primary" data-ng-class="{'label': true, 'label-primary': !metadata.values.isMaxSizeReached, 'label-warning': !!metadata.values.isMaxSizeReached}">{{ metadata.values.range }}</span>
           </div>
           <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">
             <span class="label label-primary">{{ playlist.length }}</span>
           </div>
           <div class="col-lg-9 col-md-8 col-sm-7 col-xs-4">
             <div class="pl-progress">
-              <div class="pl-progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ metadata.values.rate }}%;">
+              <div class="pl-progress-bar" data-ng-class="{'progress-bar-primary': !metadata.values.isMaxSizeReached, 'progress-bar-success': metadata.values.isMaxSizeReached}" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ metadata.values.rate }}%;">
                 {{ metadata.values.rate }} %
               </div>
             </div>

@@ -1,19 +1,26 @@
 <table class="table table-hover">
   <tbody data-ng-model="playlist" ui-sortable="sortableOptions">
     <tr class="grabbable" data-ng-repeat="track in playlist track by $index">
-      <td><span>{{ track.literalStart }}</span></td>
+      <td>
+        <span>{{ track.literalStart }}</span>
+        <span>{{ track.literalEnd }}</span>
+      </td>
       <td>
         <div class="media">
           <div class="media-left" data-ng-show="cfg.showVideoInPlaylist" >
-            <video width="{{ cfg.videoHeight }}" height="120" controls preload="none">
+            <video width="{{ cfg.videoHeight }}" height="120" poster="{{ track.poster }}" controls preload="none">
               <source data-ng-src="{{ track.filepath }}" type="video/mp4">
               Your browser does not support the video tag.
             </video> 
           </div>
           <div class="media-body">
-            <h4 class="media-heading">{{ track.title }}</h4>
-            <p><span>{{ track.duration }}</span> {{ track.typeDesc }} </p>
-            <p class="hidden-xs">{{ track.description }} <span>({{ track.id }})</span></p>
+            <h4 class="media-heading">{{ track.title }} ({{ track.id }})</h4>
+            <p class="hidden-xs">{{ track.description }}</p>
+            <ul>
+              <li>durée : {{ track.duration | duration}}</li>
+              <li>type : {{ track.typeDesc }}</li>
+              <li>origine : {{ track.origin }}</li>
+            </ul>
           </div>
         </div>
       </td>
@@ -21,7 +28,7 @@
         <table>
           <tr>
             <td>
-              <button type="button" class="btn btn-sm btn-default" data-ng-click="openPicker($index)" data-ng-disabled="metadata.isMaxSizeReached">
+              <button type="button" class="btn btn-sm btn-default" data-ng-click="openPicker($index)" data-ng-disabled="metadata.values.isMaxSizeReached">
                 <i class="fa fa-lg fa-level-up" aria-hidden="true"></i>
               </button>
             </td>
@@ -35,7 +42,7 @@
           </tr>
           <tr>
             <td>
-              <button type="button" class="btn btn-sm btn-default" data-ng-click="openPicker($index + 1)" data-ng-disabled="metadata.isMaxSizeReached">
+              <button type="button" class="btn btn-sm btn-default" data-ng-click="openPicker($index + 1)" data-ng-disabled="metadata.values.isMaxSizeReached">
                 <i class="fa fa-lg fa-level-down" aria-hidden="true"></i>
               </button>
             </td>

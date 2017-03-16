@@ -84,8 +84,12 @@ plRepo.buildTrackSet()
 app.use(bodyParser.json());
 app.use(trace.req);
 app.use('/', express.static(path.join(__dirname, cfg.environment.clientApp)));
-const videoDir = path.join(cfg.environment.commonDir, cfg.environment.videoRoute);
-app.use('/' + cfg.environment.videoRoute, express.static(videoDir));
+const videoDir = path.join(cfg.environment.resourcePath, cfg.environment.commonDir);
+app.use('/' + cfg.environment.commonDir, express.static(videoDir));
+plRepo.listDirs(cfg.environment.customPath)
+.forEach(dirname => {
+  app.use('/' + dirname, express.static(path.join(cfg.environment.customPath, dirname)));
+});
 
 app.get('/api/track', (req, res) => {
   console.log('get track');

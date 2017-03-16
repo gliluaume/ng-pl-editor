@@ -1,23 +1,31 @@
 <table class="table table-hover">
   <thead>
     <th>début</th>
+    <th>fin</th>
     <th>durée</th>
+    <th>origine</th>
     <th>type</th>
     <th>id</th>
     <th>titre</th>
     <th></th>
+    <th></th>
   </thead>
   <tbody data-ng-model="playlist" ui-sortable="sortableOptions">
-    <tr class="grabbable" data-ng-repeat="track in playlist track by $index">
+    <tr data-ng-repeat="track in playlist track by $index">
       <td><span>{{ track.literalStart }}</span></td>
-      <td>{{ track.duration |duration }}</td>
+      <td><span>{{ track.literalEnd }}</span></td>
+      <td>{{ track.duration | duration }}</td>
+      <td>{{ track.origin }}</td>
       <td>{{ track.typeDesc }}</td>
       <td>{{ track.id }}</td>
       <td>{{ track.title }}</td>
+      <td class="grabbable">
+        <i class="fa fa-arrows" aria-hidden="true"></i>
+      </td>
       <td>
-        <i class="fa fa-angle-up stick-up" aria-hidden="true" role="button" data-ng-click="openPicker($index)" data-ng-disabled="metadata.isMaxSizeReached"></i>
+        <i class="fa fa-angle-up stick-up" data-ng-class="{'pointable': !metadata.values.isMaxSizeReached}" aria-hidden="true" data-ng-click="openPicker($index)"></i>
         <i class="fa fa-minus" style="color:red" aria-hidden="true" role="button" data-ng-click="remove($index)"></i>
-        <i class="fa fa-angle-down stick-bottom" aria-hidden="true" role="button" data-ng-click="openPicker($index + 1)" data-ng-disabled="metadata.isMaxSizeReached"></i>
+        <i class="fa fa-angle-down stick-bottom" data-ng-class="{'pointable': !metadata.values.isMaxSizeReached}" aria-hidden="true" data-ng-click="openPicker($index + 1)"></i>
       </td>
     </tr>
   </tbody>
