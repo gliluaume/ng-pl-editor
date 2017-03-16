@@ -23,8 +23,6 @@ const configuration = {
     resourcePath: '/home/guillaume/Documents/projets/ng-pl-editor/resource', 
     commonDir: 'cmn',
     customPath: '/home/guillaume/Documents/projets/ng-pl-editor/resource/custom'
-    //,
-    // videoRoute: 'video'
   }
 };
 

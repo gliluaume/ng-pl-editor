@@ -20,9 +20,9 @@ const configuration = {
     dirnamePattern: /^test-[ab]/,
     filenamePattern: '[A-Z]*_[0-9]*_[0-9]*.mp4',
     clientApp: '../client/app/',
-    commonDir: '/home/guillaume/Documents/projets/ng-pl-editor/resource',
-    customPath: '/home/guillaume/Documents/projets/ng-pl-editor/resource/custom',
-    videoRoute: 'video'
+    resourcePath: '/home/guillaume/Documents/projets/ng-pl-editor/resource', 
+    commonDir: 'cmn',
+    customPath: '/home/guillaume/Documents/projets/ng-pl-editor/resource/custom'
   }
 };
 
