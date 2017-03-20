@@ -3,8 +3,6 @@
 var configurePlRepo = function(cfgModule) {
 
   if(!cfgModule) cfgModule = './configuration';
-
-  const _ = require('underscore');
   const fs = require('fs');
   const dateFormat = require('date-format');
   const exec = require('child_process').exec;
@@ -190,7 +188,7 @@ var configurePlRepo = function(cfgModule) {
           .map(function(line) {
             return parseInt(path.basename(line).split('_')[1], 10);
           })
-          trackIds = _.compact(trackIds);
+          trackIds = trackIds.filter(id => id);
           if(callback) callback(trackIds);
         });
       }

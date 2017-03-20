@@ -30,3 +30,6 @@ Describes video file pattern
 ## v1.2.0
  - playlist in customs directories
  - search tracks in customs directories
+
+## v1.2.1
+ - remove reference to underscore.js
